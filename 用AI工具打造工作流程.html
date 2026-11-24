@@ -1,0 +1,2098 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="artifact-type" content="narrative">
+  <meta name="design-style" content="aurora">
+  <title>NBA 薪資上限與交易規則圖解：2026–27 帽線、豪華稅與 Second Apron 實戰指南</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/scrollama@3.2.0/build/scrollama.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      color-scheme: dark;
+
+      /* 1. Aurora dark mineral-slate palette */
+      --background: #0c1214;
+      --surface-container-low: #111a1e;
+      --surface-container: #152024;
+      --surface-container-high: #1c2a30;
+
+      --on-surface: #edf3f5;
+      --on-surface-variant: #94a8b0;
+
+      --outline: #38515c;
+      --outline-variant: #213138;
+
+      --primary: #63c7d6;
+      --on-primary: #081214;
+      --primary-container: #163840;
+      --on-primary-container: #c7f0f7;
+      --secondary: #5d7882;
+      --tertiary: #87d69b;
+      --error: #f27474;
+      --on-error: #1a0606;
+
+      --data-1: #63c7d6;
+      --data-2: #87d69b;
+      --data-3: #e8b954;
+      --data-4: #f08c70;
+      --data-context: #415861;
+
+      --font-headline: 'Noto Sans TC', 'Instrument Sans', sans-serif;
+      --font-body: 'Noto Sans TC', 'Plus Jakarta Sans', sans-serif;
+      --font-label: 'Geist Mono', 'Noto Sans TC', monospace;
+
+      --rounded: 0.5rem;
+      --rounded-lg: 0.75rem;
+      --rounded-full: 9999px;
+
+      --hairline: 1px solid var(--outline-variant);
+      --hairline-strong: 1px solid var(--outline);
+      --panel-gradient: linear-gradient(180deg, #162226 0%, #111a1e 100%);
+      --hero-wash: radial-gradient(circle at 82% 14%, color-mix(in srgb, var(--primary) 11%, transparent), transparent 48%);
+      --heading-tracking: -0.02em;
+      --label-tracking: 0.06em;
+
+      --sage-tint: color-mix(in srgb, var(--tertiary) 13%, transparent);
+      --cyan-tint: color-mix(in srgb, var(--primary) 13%, transparent);
+      --amber-tint: color-mix(in srgb, var(--data-3) 14%, transparent);
+      --coral-tint: color-mix(in srgb, var(--data-4) 14%, transparent);
+      --error-tint: color-mix(in srgb, var(--error) 14%, transparent);
+
+      --sage-border: color-mix(in srgb, var(--tertiary) 36%, transparent);
+      --cyan-border: color-mix(in srgb, var(--primary) 36%, transparent);
+      --amber-border: color-mix(in srgb, var(--data-3) 38%, transparent);
+      --coral-border: color-mix(in srgb, var(--data-4) 40%, transparent);
+      --error-border: color-mix(in srgb, var(--error) 44%, transparent);
+
+      /* 2. Shared semantic & layout tokens */
+      --positive: var(--tertiary);
+      --warning: var(--data-3);
+      --focus: var(--primary);
+
+      --display-size: clamp(2rem, 1.3rem + 2.6vw, 3.25rem);
+      --headline-size: clamp(1.45rem, 1.15rem + 1.3vw, 2.1rem);
+      --subhead-size: clamp(1.125rem, 1.02rem + 0.4vw, 1.35rem);
+      --body-size: clamp(1rem, 0.96rem + 0.18vw, 1.0625rem);
+      --label-size: clamp(0.75rem, 0.72rem + 0.1vw, 0.8125rem);
+
+      --space-xs: 0.25rem;
+      --space-sm: 0.5rem;
+      --space-md: 1rem;
+      --space-lg: 1.5rem;
+      --space-xl: 2.5rem;
+      --space-2xl: 4rem;
+      --space-3xl: 6rem;
+
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+      --dur-micro: 120ms;
+      --dur-short: 220ms;
+      --dur-long: 420ms;
+    }
+
+    /* Base reset */
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body {
+      overflow-x: clip;
+      margin: 0;
+      padding: 0;
+      background-color: var(--background);
+      color: var(--on-surface);
+      font-family: var(--font-body);
+      font-size: var(--body-size);
+      line-height: 1.65;
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+    }
+    header { position: static !important; }
+    button, input, select, textarea { font-family: inherit; }
+
+    :focus-visible {
+      outline: 2px solid var(--focus);
+      outline-offset: 2px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    /* Layout containers — overflow-x: clip preserves sticky figure pinning */
+    .wrap {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 var(--space-lg);
+      overflow-x: clip;
+    }
+    .wrap * { min-width: 0; }
+
+    /* Typography helpers */
+    h1, h2, h3, h4 {
+      font-family: var(--font-headline);
+      font-weight: 600;
+      letter-spacing: var(--heading-tracking);
+      color: var(--on-surface);
+      margin: 0;
+    }
+    p {
+      margin: 0;
+      color: var(--on-surface-variant);
+      max-width: 65ch;
+    }
+    strong {
+      color: var(--on-surface);
+      font-weight: 600;
+    }
+    .mono-label {
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      letter-spacing: var(--label-tracking);
+      text-transform: uppercase;
+      color: var(--on-surface-variant);
+    }
+    .cjk-label {
+      font-family: var(--font-body);
+      font-size: var(--label-size);
+      letter-spacing: 0;
+      text-transform: none;
+      color: var(--on-surface-variant);
+    }
+    .tabular {
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Hero section */
+    .hero {
+      padding: var(--space-2xl) 0 var(--space-xl);
+      border-bottom: var(--hairline);
+      background-image: var(--hero-wash);
+    }
+    .hero-meta {
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      letter-spacing: var(--label-tracking);
+      color: var(--primary);
+      margin-bottom: var(--space-md);
+      display: block;
+    }
+    .hero h1 {
+      font-size: var(--display-size);
+      line-height: 1.14;
+      max-width: 24ch;
+      margin-bottom: var(--space-md);
+    }
+    .hero-lede {
+      font-size: var(--subhead-size);
+      line-height: 1.55;
+      color: var(--on-surface-variant);
+      max-width: 62ch;
+      margin-bottom: var(--space-xl);
+    }
+
+    /* Metric tile grid */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
+      gap: var(--space-md);
+      margin-bottom: var(--space-lg);
+    }
+    .panel {
+      background: var(--panel-gradient);
+      border: var(--hairline);
+      border-radius: var(--rounded-lg);
+      padding: var(--space-lg);
+    }
+    .kpi-card {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+      border-top: 2px solid var(--outline);
+    }
+    .kpi-card.tone-cyan { border-top-color: var(--data-1); }
+    .kpi-card.tone-amber { border-top-color: var(--data-3); }
+    .kpi-card.tone-coral { border-top-color: var(--data-4); }
+    .kpi-card.tone-red { border-top-color: var(--error); }
+
+    .kpi-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: var(--space-sm);
+    }
+    .kpi-value {
+      font-family: var(--font-label);
+      font-size: clamp(1.5rem, 1.25rem + 0.9vw, 2rem);
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -0.03em;
+      color: var(--on-surface);
+      line-height: 1.15;
+    }
+    .kpi-delta {
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      color: var(--tertiary);
+    }
+    .kpi-note {
+      font-size: 0.875rem;
+      color: var(--on-surface-variant);
+      margin-top: var(--space-xs);
+    }
+    .hero-cue {
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      color: var(--on-surface-variant);
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding-top: var(--space-sm);
+    }
+
+    /* Section framing */
+    .section-block {
+      padding: var(--space-2xl) 0;
+      border-bottom: var(--hairline);
+    }
+    .section-header {
+      margin-bottom: var(--space-xl);
+      display: grid;
+      gap: var(--space-sm);
+    }
+    .section-eyebrow {
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      letter-spacing: var(--label-tracking);
+      text-transform: uppercase;
+      color: var(--primary);
+    }
+    .section-header h2 {
+      font-size: var(--headline-size);
+      line-height: 1.2;
+      max-width: 34ch;
+    }
+
+    /* ══ PIN CORE — Sticky Scrollytelling ═══════════════════════════════════ */
+    .scrolly {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+      gap: var(--space-xl);
+      align-items: start;
+    }
+    .scrolly-graphic {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      display: grid;
+      align-items: center;
+      margin: 0;
+      padding: var(--space-md) 0;
+    }
+    .steps {
+      padding: 18vh 0 24vh;
+    }
+    .step {
+      min-height: 74vh;
+      display: grid;
+      align-content: center;
+      padding: var(--space-sm) 0;
+    }
+    @media (max-width: 860px) {
+      .scrolly {
+        grid-template-columns: 1fr;
+      }
+      .scrolly-graphic {
+        position: sticky;
+        top: 0;
+        height: auto;
+        min-height: 360px;
+        z-index: 2;
+        background: color-mix(in srgb, var(--background) 92%, transparent);
+        padding: var(--space-sm) 0;
+      }
+      .steps {
+        padding: var(--space-lg) 0 var(--space-xl);
+      }
+      .step {
+        min-height: 48vh;
+      }
+    }
+    /* ══ end PIN CORE ═══════════════════════════════════════════════════════ */
+
+    .step-card {
+      background: var(--surface-container-low);
+      border: var(--hairline);
+      border-radius: var(--rounded-lg);
+      padding: var(--space-lg);
+      opacity: 0.45;
+      transform: translateY(8px);
+      transition: opacity var(--dur-long) var(--ease-out),
+                  transform var(--dur-long) var(--ease-out),
+                  border-color var(--dur-short) var(--ease-out),
+                  background-color var(--dur-short) var(--ease-out);
+      cursor: pointer;
+    }
+    .step.is-active .step-card {
+      opacity: 1;
+      transform: none;
+      background: var(--panel-gradient);
+      border-color: var(--outline);
+    }
+    .step-idx {
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      letter-spacing: var(--label-tracking);
+      color: var(--primary);
+      margin-bottom: var(--space-xs);
+    }
+    .step-card h3 {
+      font-size: var(--subhead-size);
+      line-height: 1.3;
+      margin-bottom: var(--space-sm);
+    }
+    .step-card p {
+      font-size: 0.96rem;
+      margin-bottom: var(--space-md);
+    }
+    .step-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-xs);
+    }
+
+    /* Status chips */
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      border-radius: var(--rounded);
+      padding: 0.2rem 0.55rem;
+      font-size: 0.78rem;
+      font-weight: 500;
+      line-height: 1.35;
+      border: 1px solid var(--outline-variant);
+      background: var(--surface-container);
+      color: var(--on-surface-variant);
+    }
+    .chip.is-sage {
+      background: var(--sage-tint);
+      color: var(--tertiary);
+      border-color: var(--sage-border);
+    }
+    .chip.is-cyan {
+      background: var(--cyan-tint);
+      color: var(--primary);
+      border-color: var(--cyan-border);
+    }
+    .chip.is-amber {
+      background: var(--amber-tint);
+      color: var(--data-3);
+      border-color: var(--amber-border);
+    }
+    .chip.is-coral {
+      background: var(--coral-tint);
+      color: var(--data-4);
+      border-color: var(--coral-border);
+    }
+    .chip.is-error {
+      background: var(--error-tint);
+      color: var(--error);
+      border-color: var(--error-border);
+    }
+
+    /* Persistent Telemetry Graphic inside Scrollytelling */
+    .ladder-board {
+      width: 100%;
+      background: var(--panel-gradient);
+      border: var(--hairline);
+      border-radius: var(--rounded-lg);
+      padding: var(--space-lg);
+      display: grid;
+      gap: var(--space-md);
+      container-type: inline-size;
+    }
+    .ladder-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+      border-bottom: var(--hairline);
+      padding-bottom: var(--space-sm);
+    }
+    .ladder-zone-readout {
+      font-family: var(--font-label);
+      font-size: 0.9rem;
+      color: var(--primary);
+      font-weight: 600;
+    }
+    .ladder-svg-wrap {
+      background: var(--background);
+      border: var(--hairline);
+      border-radius: var(--rounded);
+      padding: var(--space-md);
+      min-height: 310px;
+      display: grid;
+      align-items: center;
+    }
+    .ladder-svg {
+      width: 100%;
+      height: auto;
+      display: block;
+      overflow: visible;
+    }
+    .ladder-status-strip {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-sm);
+    }
+    .ladder-stat {
+      background: var(--background);
+      border: var(--hairline);
+      border-radius: var(--rounded);
+      padding: var(--space-sm) var(--space-md);
+    }
+    .ladder-stat-label {
+      font-size: 0.75rem;
+      color: var(--on-surface-variant);
+      margin-bottom: var(--space-xs);
+    }
+    @container (max-width: 460px) {
+      .ladder-status-strip {
+        grid-template-columns: 1fr;
+      }
+    }
+    .ladder-stat-val {
+      font-family: var(--font-label);
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--on-surface);
+    }
+
+    /* Interactive Cap & Exception Simulator */
+    .sim-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.25fr);
+      gap: var(--space-lg);
+      align-items: start;
+    }
+    @media (max-width: 900px) {
+      .sim-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+    .well {
+      background: var(--background);
+      border: var(--hairline);
+      border-radius: var(--rounded);
+      padding: var(--space-md);
+    }
+    .control-group {
+      display: grid;
+      gap: var(--space-sm);
+      margin-bottom: var(--space-lg);
+    }
+    .control-label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: var(--space-sm);
+    }
+    .control-label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--on-surface);
+    }
+    .dual-input-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 112px;
+      gap: var(--space-md);
+      align-items: center;
+    }
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--primary);
+      cursor: pointer;
+      min-height: 44px;
+    }
+    input[type="number"] {
+      width: 100%;
+      background: var(--surface-container);
+      color: var(--on-surface);
+      border: var(--hairline-strong);
+      border-radius: var(--rounded);
+      padding: 0.55rem 0.65rem;
+      font-family: var(--font-label);
+      font-size: 0.95rem;
+      font-variant-numeric: tabular-nums;
+      min-height: 44px;
+      text-align: right;
+    }
+    input[type="number"]:focus-visible {
+      border-color: var(--primary);
+    }
+
+    .preset-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-sm);
+      margin-bottom: var(--space-lg);
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-xs);
+      min-height: 44px;
+      padding: var(--space-sm) var(--space-md);
+      border-radius: var(--rounded);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: var(--hairline-strong);
+      background: transparent;
+      color: var(--on-surface);
+      transition: background-color var(--dur-micro) var(--ease-out),
+                  border-color var(--dur-micro) var(--ease-out),
+                  color var(--dur-micro) var(--ease-out);
+    }
+    .btn:hover {
+      background: var(--surface-container-high);
+      border-color: var(--primary);
+    }
+    .btn.is-active {
+      background: var(--primary-container);
+      border-color: var(--primary);
+      color: var(--on-primary-container);
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: var(--on-primary);
+      border-color: var(--primary);
+    }
+    .btn-primary:hover {
+      background: var(--on-primary-container);
+      color: var(--on-primary);
+    }
+
+    .toggle-list {
+      display: grid;
+      gap: var(--space-sm);
+    }
+    .toggle-item {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-sm);
+      background: var(--background);
+      border: var(--hairline);
+      border-radius: var(--rounded);
+      padding: var(--space-sm) var(--space-md);
+      cursor: pointer;
+      min-height: 44px;
+    }
+    .toggle-item input[type="checkbox"] {
+      margin-top: var(--space-xs);
+      width: 18px;
+      height: 18px;
+      accent-color: var(--primary);
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+    .toggle-text {
+      display: grid;
+      gap: var(--space-xs);
+    }
+    .toggle-title {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--on-surface);
+    }
+    .toggle-desc {
+      font-size: 0.78rem;
+      color: var(--on-surface-variant);
+    }
+
+    /* Simulator output dashboard */
+    .sim-banner {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: var(--space-md);
+      padding-bottom: var(--space-md);
+      border-bottom: var(--hairline);
+      margin-bottom: var(--space-md);
+    }
+    .sim-payroll-big {
+      font-family: var(--font-label);
+      font-size: clamp(1.75rem, 1.4rem + 1vw, 2.3rem);
+      font-weight: 600;
+      color: var(--on-surface);
+      font-variant-numeric: tabular-nums;
+      line-height: 1.1;
+    }
+    .sim-meter-track {
+      position: relative;
+      height: 12px;
+      border-radius: var(--rounded-full);
+      background: var(--background);
+      border: var(--hairline);
+      margin: var(--space-md) 0 var(--space-xs);
+      overflow: hidden;
+    }
+    .sim-meter-fill {
+      height: 100%;
+      width: 60%;
+      background: var(--primary);
+      border-radius: var(--rounded-full);
+      transition: width var(--dur-short) var(--ease-out), background-color var(--dur-short) var(--ease-out);
+    }
+    .sim-markers {
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--font-label);
+      font-size: 0.72rem;
+      color: var(--on-surface-variant);
+      margin-bottom: var(--space-lg);
+    }
+
+    .matrix-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(210px, 100%), 1fr));
+      gap: var(--space-sm);
+      margin-bottom: var(--space-lg);
+    }
+    .matrix-cell {
+      background: var(--background);
+      border: var(--hairline);
+      border-radius: var(--rounded);
+      padding: var(--space-sm) var(--space-md);
+      display: grid;
+      gap: var(--space-xs);
+    }
+    .matrix-cell-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--space-xs);
+    }
+    .matrix-name {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--on-surface);
+    }
+    .matrix-reason {
+      font-size: 0.76rem;
+      color: var(--on-surface-variant);
+      line-height: 1.4;
+    }
+
+    .sim-output-panel {
+      container-type: inline-size;
+    }
+    .sim-finance-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-md);
+    }
+    @container (max-width: 480px) {
+      .sim-finance-row {
+        grid-template-columns: 1fr;
+      }
+    }
+    @media (max-width: 560px) {
+      .sim-finance-row,
+      .ladder-status-strip,
+      .preset-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Filterable Exception & Rules Explorer */
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+      margin-bottom: var(--space-lg);
+    }
+    .filter-btn {
+      min-height: 44px;
+      padding: var(--space-sm) var(--space-lg);
+      border-radius: var(--rounded);
+      background: var(--surface-container);
+      border: var(--hairline-strong);
+      color: var(--on-surface-variant);
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color var(--dur-micro) var(--ease-out),
+                  color var(--dur-micro) var(--ease-out),
+                  border-color var(--dur-micro) var(--ease-out);
+    }
+    .filter-btn:hover {
+      background: var(--surface-container-high);
+      color: var(--on-surface);
+    }
+    .filter-btn.is-active {
+      background: var(--primary-container);
+      border-color: var(--primary);
+      color: var(--on-primary-container);
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+      gap: var(--space-lg);
+    }
+    .rule-card {
+      display: grid;
+      gap: var(--space-sm);
+      align-content: start;
+    }
+    .rule-card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: var(--space-sm);
+    }
+    .rule-card h3 {
+      font-size: 1.125rem;
+    }
+    .rule-amount {
+      font-family: var(--font-label);
+      font-size: 1.35rem;
+      font-weight: 600;
+      color: var(--primary);
+      font-variant-numeric: tabular-nums;
+    }
+    .rule-meta {
+      font-family: var(--font-label);
+      font-size: 0.78rem;
+      color: var(--on-surface-variant);
+    }
+    .rule-example {
+      background: var(--background);
+      border-left: 2px solid var(--outline);
+      padding: var(--space-sm) var(--space-md);
+      font-size: 0.85rem;
+      color: var(--on-surface-variant);
+      border-radius: 0 var(--rounded) var(--rounded) 0;
+    }
+
+    /* Tables */
+    .table-wrap {
+      overflow-x: auto;
+      border: var(--hairline);
+      border-radius: var(--rounded-lg);
+      background: var(--panel-gradient);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.92rem;
+    }
+    th {
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      letter-spacing: var(--label-tracking);
+      color: var(--on-surface-variant);
+      padding: var(--space-md);
+      border-bottom: var(--hairline-strong);
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    td {
+      padding: var(--space-md);
+      border-bottom: var(--hairline);
+      color: var(--on-surface-variant);
+      vertical-align: top;
+    }
+    tr:last-child td {
+      border-bottom: none;
+    }
+    td.num, th.num {
+      text-align: right;
+      font-family: var(--font-label);
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+    td strong {
+      color: var(--on-surface);
+    }
+
+    /* Split layout for Luxury Tax & Chart */
+    .split-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+      gap: var(--space-xl);
+      align-items: start;
+    }
+    @media (max-width: 860px) {
+      .split-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .chart-box {
+      min-height: 340px;
+      position: relative;
+      width: 100%;
+    }
+    .chart-box canvas {
+      width: 100% !important;
+      height: 340px !important;
+    }
+
+    /* Ecological / Veteran impact grid */
+    .asymmetric-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.95fr);
+      gap: var(--space-lg);
+      align-items: start;
+    }
+    @media (max-width: 860px) {
+      .asymmetric-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .insight-list {
+      display: grid;
+      gap: var(--space-md);
+    }
+    .insight-item {
+      border-left: 2px solid var(--primary);
+      padding-left: var(--space-md);
+      display: grid;
+      gap: var(--space-xs);
+    }
+    .insight-item.is-coral { border-left-color: var(--data-4); }
+    .insight-item.is-amber { border-left-color: var(--data-3); }
+    .insight-item.is-sage { border-left-color: var(--tertiary); }
+    .insight-item h4 {
+      font-size: 1.02rem;
+    }
+    .insight-item p {
+      font-size: 0.92rem;
+    }
+
+    /* FAQ Accordion */
+    .faq-list {
+      display: grid;
+      gap: var(--space-sm);
+    }
+    details.faq-item {
+      background: var(--panel-gradient);
+      border: var(--hairline);
+      border-radius: var(--rounded-lg);
+      padding: var(--space-md) var(--space-lg);
+    }
+    details.faq-item summary {
+      cursor: pointer;
+      font-weight: 600;
+      color: var(--on-surface);
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--space-md);
+      min-height: 44px;
+    }
+    details.faq-item summary::-webkit-details-marker { display: none; }
+    details.faq-item summary::after {
+      content: '+';
+      font-family: var(--font-label);
+      font-size: 1.2rem;
+      color: var(--primary);
+      flex-shrink: 0;
+    }
+    details.faq-item[open] summary::after {
+      content: '−';
+    }
+    details.faq-item p {
+      padding-top: var(--space-sm);
+      border-top: var(--hairline);
+      margin-top: var(--space-sm);
+      font-size: 0.95rem;
+    }
+
+    /* Footer */
+    .sources-footer {
+      padding: var(--space-xl) 0 var(--space-2xl);
+      display: grid;
+      gap: var(--space-md);
+    }
+    .sources-footer p {
+      font-size: 0.875rem;
+      max-width: 75ch;
+    }
+
+    @media (max-width: 640px) {
+      .wrap { padding: 0 var(--space-md); }
+      .hero { padding: var(--space-xl) 0 var(--space-lg); }
+      .section-block { padding: var(--space-xl) 0; }
+      .panel { padding: var(--space-md); }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <!-- ═══ HERO ═══════════════════════════════════════════════════════════ -->
+    <header class="hero">
+      <span class="hero-meta">2023 CBA FRAMEWORK · 2026–27 OFFICIAL CAP NUMBERS · USD MILLIONS</span>
+      <h1>看懂 NBA 薪資戰場：四道門檻與勞資規則全圖解</h1>
+      <p class="hero-lede">
+        為什麼超過薪資帽的球隊還能繼續簽人，而願意繳豪華稅的豪門卻連中產老將都簽不到？因為 NBA 並非單一上限，而是由<strong>薪資帽、豪華稅線、第一層與第二層硬上限（Aprons）</strong>組成的四階動態防線。
+      </p>
+
+      <div class="kpi-grid">
+        <div class="panel kpi-card tone-cyan">
+          <div class="kpi-title">
+            <span class="mono-label">SALARY CAP</span>
+            <span class="chip is-cyan">軟性上限</span>
+          </div>
+          <div class="kpi-value">$164.961M</div>
+          <div class="kpi-delta">+6.67% vs 2025–26 ($154.647M)</div>
+          <p class="kpi-note">一般球隊薪資基準；可透過鳥權與中產等合規例外超帽。</p>
+        </div>
+
+        <div class="panel kpi-card tone-amber">
+          <div class="kpi-title">
+            <span class="mono-label">TAX LEVEL</span>
+            <span class="chip is-amber">121.5% 帽線</span>
+          </div>
+          <div class="kpi-value">$200.428M</div>
+          <div class="kpi-delta">+6.67% vs 2025–26 ($187.895M)</div>
+          <p class="kpi-note">例行賽末場開賽時超線須分級繳納累進豪華稅。</p>
+        </div>
+
+        <div class="panel kpi-card tone-coral">
+          <div class="kpi-title">
+            <span class="mono-label">FIRST APRON</span>
+            <span class="chip is-coral">首道硬限制</span>
+          </div>
+          <div class="kpi-value">$209.015M</div>
+          <div class="kpi-delta">+6.67% vs 2025–26 ($195.945M)</div>
+          <p class="kpi-note">禁用全額中產、雙年例外、先簽後換接手與高薪買斷球員。</p>
+        </div>
+
+        <div class="panel kpi-card tone-red">
+          <div class="kpi-title">
+            <span class="mono-label">SECOND APRON</span>
+            <span class="chip is-error">終極紅線</span>
+          </div>
+          <div class="kpi-value">$221.686M</div>
+          <div class="kpi-delta">+$56.725M 高於薪資帽</div>
+          <p class="kpi-note">禁用迷你中產、禁止打包交易與付現金，並凍結 7 年後首輪籤。</p>
+        </div>
+      </div>
+
+      <div class="hero-cue">
+        <span>向下捲動</span>
+        <span>·</span>
+        <span>逐步拆解團隊薪資跨越四道門檻時的規則變化</span>
+      </div>
+    </header>
+
+    <!-- ═══ SECTION 1: STICKY SCROLLYTELLING LADDER ═════════════════════════ -->
+    <section class="section-block" aria-labelledby="ladder-heading">
+      <div class="section-header">
+        <span class="section-eyebrow">01 · SALARY THRESHOLD PROGRESSION</span>
+        <h2 id="ladder-heading">同一支球隊每多花一塊錢，就會觸發完全不同的補強規則</h2>
+        <p>媒體常說「球隊總薪資」，但在 2023 CBA 中，<strong>Team Salary（算帽線）</strong>、<strong>Tax Team Salary（算稅線）</strong>與 <strong>Apron Team Salary（算兩道硬上限）</strong>的計算口徑並不完全相同。沿著右側階梯捲動，觀察不同水位下的操作權限切換。</p>
+      </div>
+
+      <div class="scrolly">
+        <figure class="scrolly-graphic">
+          <div class="ladder-board" id="ladder-board">
+            <div class="ladder-head">
+              <div>
+                <div class="mono-label">2026–27 CAP TELEMETRY GAUGE</div>
+                <div class="ladder-zone-readout" id="gauge-zone-title">區間 1：低於薪資帽 ($150.0M 示例)</div>
+              </div>
+              <span class="chip is-cyan" id="gauge-zone-badge">空間運作區</span>
+            </div>
+
+            <div class="ladder-svg-wrap">
+              <svg class="ladder-svg" viewBox="0 0 540 310" role="img" aria-label="NBA 2026-27 四道薪資門檻光譜圖">
+                <!-- Vertical Scale Axis -->
+                <line x1="88" y1="22" x2="88" y2="288" stroke="var(--outline)" stroke-width="1.5" />
+                <!-- Zone background highlights (toggled via opacity in JS) -->
+                <rect id="zone-band-0" x="90" y="218" width="430" height="70" fill="var(--cyan-tint)" rx="4" opacity="0.85" />
+                <rect id="zone-band-1" x="90" y="156" width="430" height="62" fill="var(--sage-tint)" rx="4" opacity="0.15" />
+                <rect id="zone-band-2" x="90" y="114" width="430" height="42" fill="var(--amber-tint)" rx="4" opacity="0.15" />
+                <rect id="zone-band-3" x="90" y="70" width="430" height="44" fill="var(--coral-tint)" rx="4" opacity="0.15" />
+                <rect id="zone-band-4" x="90" y="22" width="430" height="48" fill="var(--error-tint)" rx="4" opacity="0.15" />
+
+                <!-- Threshold lines (Bottom to Top: Cap -> Tax -> 1st Apron -> 2nd Apron) -->
+                <!-- Salary Cap: $164.961M -->
+                <line x1="80" y1="218" x2="520" y2="218" stroke="var(--data-1)" stroke-width="1.5" stroke-dasharray="5 4" />
+                <text x="10" y="222" fill="var(--data-1)" font-family="var(--font-label)" font-size="11">$164.96M</text>
+                <text x="102" y="212" fill="var(--data-1)" font-family="var(--font-body)" font-size="11" font-weight="600">薪資帽 Salary Cap</text>
+
+                <!-- Tax Level: $200.428M -->
+                <line x1="80" y1="156" x2="520" y2="156" stroke="var(--data-3)" stroke-width="1.5" stroke-dasharray="5 4" />
+                <text x="10" y="160" fill="var(--data-3)" font-family="var(--font-label)" font-size="11">$200.43M</text>
+                <text x="102" y="150" fill="var(--data-3)" font-family="var(--font-body)" font-size="11" font-weight="600">豪華稅線 Tax Level (121.5%)</text>
+
+                <!-- 1st Apron: $209.015M -->
+                <line x1="80" y1="114" x2="520" y2="114" stroke="var(--data-4)" stroke-width="2" />
+                <text x="10" y="118" fill="var(--data-4)" font-family="var(--font-label)" font-size="11">$209.02M</text>
+                <text x="102" y="108" fill="var(--data-4)" font-family="var(--font-body)" font-size="11" font-weight="600">第一層硬上限 First Apron</text>
+
+                <!-- 2nd Apron: $221.686M -->
+                <line x1="80" y1="70" x2="520" y2="70" stroke="var(--error)" stroke-width="2.2" />
+                <text x="10" y="74" fill="var(--error)" font-family="var(--font-label)" font-size="11">$221.69M</text>
+                <text x="102" y="64" fill="var(--error)" font-family="var(--font-body)" font-size="11" font-weight="600">第二層硬上限 Second Apron</text>
+
+                <!-- Floor / Top Labels -->
+                <text x="10" y="286" fill="var(--on-surface-variant)" font-family="var(--font-label)" font-size="10">90% 窮人底線</text>
+                <text x="10" y="34" fill="var(--on-surface-variant)" font-family="var(--font-label)" font-size="10">&gt;$221.69M</text>
+
+                <!-- Active Payroll Bar & Marker -->
+                <rect x="380" y="22" width="54" height="266" fill="var(--surface-container)" stroke="var(--outline-variant)" rx="6" />
+                <rect id="gauge-bar-fill" x="382" y="242" width="50" height="44" fill="var(--data-1)" rx="4" opacity="0.85" />
+                <line id="gauge-pointer-line" x1="368" y1="242" x2="448" y2="242" stroke="var(--on-surface)" stroke-width="2" />
+                <circle id="gauge-pointer-dot" cx="407" cy="242" r="5" fill="var(--on-surface)" />
+                <text id="gauge-pointer-val" x="454" y="246" fill="var(--on-surface)" font-family="var(--font-label)" font-size="12" font-weight="600">$150.0M</text>
+              </svg>
+            </div>
+
+            <div class="ladder-status-strip">
+              <div class="ladder-stat">
+                <div class="ladder-stat-label">可用中產例外</div>
+                <div class="ladder-stat-val" id="gauge-mle">空間中產 ($9.366M)</div>
+              </div>
+              <div class="ladder-stat">
+                <div class="ladder-stat-label">豪華稅狀態</div>
+                <div class="ladder-stat-val" id="gauge-tax">免繳豪華稅</div>
+              </div>
+              <div class="ladder-stat">
+                <div class="ladder-stat-label">交易與選秀限制</div>
+                <div class="ladder-stat-val" id="gauge-trade">無 Apron 限制</div>
+              </div>
+            </div>
+          </div>
+        </figure>
+
+        <div class="steps" id="steps"></div>
+      </div>
+    </section>
+
+    <!-- ═══ SECTION 2: INTERACTIVE SIMULATOR ═══════════════════════════════ -->
+    <section class="section-block" aria-labelledby="sim-heading">
+      <div class="section-header">
+        <span class="section-eyebrow">02 · INTERACTIVE CAP DIAGNOSTIC</span>
+        <h2 id="sim-heading">實戰沙盤：測試球隊薪資水位與補強權限</h2>
+        <p>輸入或拖曳球隊操作後的 <strong>Apron Team Salary</strong>（參考 2026–27 官方門檻），即時檢驗「甲、乙、丙」三種假設球隊在稅負、中產特例、先簽後換、買斷市場與選秀權上的真實處境。</p>
+      </div>
+
+      <div class="sim-layout">
+        <!-- Left: Controls -->
+        <div class="panel">
+          <div class="control-group">
+            <div class="control-label-row">
+              <label for="input-payroll" class="control-label">球隊操作後團隊薪資（百萬美元）</label>
+              <span class="mono-label">RANGE $140M – $245M</span>
+            </div>
+            <div class="dual-input-row">
+              <input type="range" id="slider-payroll" min="140" max="245" step="0.5" value="205" oninput="syncPayrollFromSlider(this.value)" aria-label="團隊薪資滑桿">
+              <input type="number" id="input-payroll" min="140" max="245" step="0.5" value="205" oninput="syncPayrollFromNumber(this.value)">
+            </div>
+          </div>
+
+          <div class="control-group">
+            <span class="control-label">快速載入情境（含籃球數據誌三隊案例）</span>
+            <div class="preset-row">
+              <button type="button" class="btn" id="preset-150" onclick="applyPreset(150, false, false, this)">空間重建隊 ($150M)</button>
+              <button type="button" class="btn is-active" id="preset-205" onclick="applyPreset(205, false, false, this)">假設甲隊 ($205M)</button>
+              <button type="button" class="btn" id="preset-212" onclick="applyPreset(212, false, false, this)">假設乙隊 ($212M)</button>
+              <button type="button" class="btn" id="preset-225" onclick="applyPreset(225, true, false, this)">假設丙隊 ($225M)</button>
+            </div>
+          </div>
+
+          <div class="toggle-list">
+            <label class="toggle-item">
+              <input type="checkbox" id="chk-repeater" onchange="updateSimulator()">
+              <span class="toggle-text">
+                <span class="toggle-title">適用「累犯稅率 (Repeater)」</span>
+                <span class="toggle-desc">前 4 個薪資帽年度中，至少有 3 年 Tax Team Salary 超過稅線（第一級稅率由 $1 跳升至 $3）。</span>
+              </span>
+            </label>
+            <label class="toggle-item">
+              <input type="checkbox" id="chk-used-tax-mle" onchange="updateSimulator()">
+              <span class="toggle-text">
+                <span class="toggle-title">本季已使用「豪華稅中產 ($6.064M)」</span>
+                <span class="toggle-desc">自 2024–25 起，使用後同年度禁止再做交易限制表 A 至 F 列操作（包含先簽後換接手與全額中產）。</span>
+              </span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Right: Live Diagnostic Output -->
+        <div class="panel sim-output-panel">
+          <div class="sim-banner">
+            <div>
+              <div class="mono-label">PROJECTED TEAM SALARY</div>
+              <div class="sim-payroll-big" id="sim-payroll-display">$205.000M</div>
+            </div>
+            <div style="text-align: right;">
+              <div class="mono-label" style="margin-bottom: var(--space-xs);">THRESHOLD STATUS</div>
+              <span class="chip is-amber" id="sim-zone-chip">超稅線・未達第一層</span>
+            </div>
+          </div>
+
+          <p id="sim-summary-text" style="font-size: 0.94rem;">
+            甲隊已高於 $200.428M 豪華稅線，因此須繳納豪華稅；但因尚未突破 $209.015M 第一層硬上限，仍保有使用全額中產（$15.044M）的資格，兩項結果可同時成立。
+          </p>
+
+          <div class="sim-meter-track" aria-hidden="true">
+            <div class="sim-meter-fill" id="sim-meter-fill"></div>
+          </div>
+          <div class="sim-markers">
+            <span>$140M</span>
+            <span>帽 $165M</span>
+            <span>稅 $200.4M</span>
+            <span>1st $209M</span>
+            <span>2nd $221.7M</span>
+          </div>
+
+          <div class="mono-label" style="margin-bottom: var(--space-sm);">補強與交易合規檢查矩陣</div>
+          <div class="matrix-grid" id="sim-matrix"></div>
+
+          <div class="sim-finance-row">
+            <div class="well">
+              <div class="mono-label">TAX EXPOSURE (EST.)</div>
+              <div class="ladder-stat-val" id="sim-tax-val" style="font-size: 1.15rem; margin: var(--space-xs) 0;">超線 $4.572M</div>
+              <div class="toggle-desc" id="sim-tax-note">若末場開賽時維持此水位，首級標準稅率每 $1 課 $1。</div>
+            </div>
+            <div class="well">
+              <div class="mono-label">DRAFT PICK RISK</div>
+              <div class="ladder-stat-val" id="sim-pick-val" style="font-size: 1.15rem; margin: var(--space-xs) 0;">未觸發凍結</div>
+              <div class="toggle-desc" id="sim-pick-note">未超過 $221.686M 第二層硬上限，7 年後首輪籤可正常交易。</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ SECTION 3: EXCEPTIONS & BIRD RIGHTS EXPLORER ══════════════════ -->
+    <section class="section-block" aria-labelledby="exceptions-heading">
+      <div class="section-header">
+        <span class="section-eyebrow">03 · EXCEPTIONS &amp; CONTRACT TOOLKIT</span>
+        <h2 id="exceptions-heading">超帽武器庫：中產特例、鳥權與頂薪條款全對照</h2>
+        <p>軟性薪資帽不代表能無限制花錢，而是必須持有對應的「例外條款（Exceptions）」才能在超帽後簽下球員。切換類別查看 2026–27 官方額度與實戰案例。</p>
+      </div>
+
+      <div class="filter-bar" role="group" aria-label="條款分類篩選">
+        <button type="button" class="filter-btn is-active" id="tab-mle" onclick="filterRules('mle', this)">中產與雙年例外 (2026–27)</button>
+        <button type="button" class="filter-btn" id="tab-bird" onclick="filterRules('bird', this)">鳥權、新秀與雙向合約</button>
+        <button type="button" class="filter-btn" id="tab-market" onclick="filterRules('market', this)">頂薪、受限自由球員與凍結期</button>
+      </div>
+
+      <div class="card-grid" id="rules-grid"></div>
+    </section>
+
+    <!-- ═══ SECTION 4: LUXURY TAX & CBA HYPOTHETICAL ═══════════════════════ -->
+    <section class="section-block" aria-labelledby="tax-heading">
+      <div class="section-header">
+        <span class="section-eyebrow">04 · PROGRESSIVE LUXURY TAX</span>
+        <h2 id="tax-heading">豪華稅怎麼算？超出越多稅率越重，累犯起跳翻三倍</h2>
+        <p>NBA 豪華稅並非固定比例，而是針對 <strong>Tax Team Salary</strong> 超過稅線（當季薪資帽的 121.5%，2026–27 為 $200.428M）的金額<strong>分級課稅</strong>，並區分標準稅率與累犯稅率。</p>
+      </div>
+
+      <div class="split-grid">
+        <div class="panel" style="display: grid; gap: var(--space-md);">
+          <div>
+            <span class="chip is-amber" style="margin-bottom: var(--space-xs);">計算基準與時點</span>
+            <h3 style="margin-bottom: var(--space-xs);">以例行賽最後一場開賽時為準</h3>
+            <p style="font-size: 0.94rem;">季中短暫超線並不直接代表繳稅，聯盟是以球隊在該年度<strong>最後一場例行賽開賽時</strong>的 Team Salary 加上條文規定加減項作為最終課稅基準。</p>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>CBA 假設算例區段</th>
+                  <th class="num">超額金額</th>
+                  <th class="num">假設稅率</th>
+                  <th class="num">該段稅額</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>第一級</strong> (前 $6M)</td>
+                  <td class="num">$6.00M</td>
+                  <td class="num">$1.00 / $1</td>
+                  <td class="num"><strong>$6.00M</strong></td>
+                </tr>
+                <tr>
+                  <td><strong>第二級</strong> (次 $6M)</td>
+                  <td class="num">$6.00M</td>
+                  <td class="num">$1.25 / $1</td>
+                  <td class="num"><strong>$7.50M</strong></td>
+                </tr>
+                <tr>
+                  <td><strong>第三級</strong> (餘 $3M)</td>
+                  <td class="num">$3.00M</td>
+                  <td class="num">$3.50 / $1</td>
+                  <td class="num"><strong>$10.50M</strong></td>
+                </tr>
+                <tr>
+                  <td><strong>合計</strong> (總超線 $15M)</td>
+                  <td class="num">$15.00M</td>
+                  <td class="num">平均 1.60x</td>
+                  <td class="num" style="color: var(--data-3);"><strong>$24.00M</strong></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="well">
+            <div class="mono-label" style="color: var(--data-4); margin-bottom: var(--space-xs);">2025–26 起新稅制：標準 $1 vs 累犯 $3</div>
+            <p style="font-size: 0.875rem;">
+              自 2025–26 起，標準稅率第一級為每 $1 課 $1；若緊接當年度之前的 4 個薪資帽年度中，至少有 3 年超過稅線，則觸發<strong>累犯稅率（Repeater）</strong>，第一級直接跳升至每 $1 課 $3。此外，CBA 僅授權 NBA <strong>可選擇</strong>將至多 50% 稅款分配給未繳稅球隊，並非固定全額均分。
+            </p>
+          </div>
+        </div>
+
+        <div class="panel" style="display: grid; gap: var(--space-md);">
+          <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: var(--space-sm);">
+            <div>
+              <div class="mono-label">CBA ARTICLE VII §2(D) HYPOTHETICAL EXAMPLE</div>
+              <h3>超線 $1,500 萬美元的累進稅額拆解</h3>
+            </div>
+            <span class="chip is-cyan">協議假設算例 (每級 $6M)</span>
+          </div>
+          <div class="chart-box">
+            <canvas id="taxChart"></canvas>
+          </div>
+          <p style="font-size: 0.84rem;">註：上圖還原 2023 CBA 條文所附假設算例（假設單級距 $600 萬美元、適用標準稅率），用以說明累進級距如何使後期每一美元的稅負急速膨脹，非真實單一球隊帳單。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ SECTION 5: SECOND APRON & ECOSYSTEM IMPACT ═════════════════════ -->
+    <section class="section-block" aria-labelledby="impact-heading">
+      <div class="section-header">
+        <span class="section-eyebrow">05 · FRONT OFFICE STRATEGY &amp; VETERAN SQUEEZE</span>
+        <h2 id="impact-heading">從「只要肯花錢就能留人」到「兩極化薪資與老將擠壓」</h2>
+        <p>2023 版 CBA 預計一路執行至 2029–30 賽季。第二層硬上限用選秀權直接綁住豪門未來，成功製造出近 7 年產生 7 支不同總冠軍的平權效果，卻也徹底改寫了自由市場生態。</p>
+      </div>
+
+      <div class="asymmetric-grid">
+        <div class="panel" style="display: grid; gap: var(--space-md);">
+          <div class="mono-label">2ND APRON PENALTY MECHANICS</div>
+          <h3>第一與第二層硬上限封鎖清單（交易限制表節錄）</h3>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>表列</th>
+                  <th>受限補強操作</th>
+                  <th>對應門檻</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="num"><strong>A</strong></td>
+                  <td>使用雙年例外（Bi-annual Exception）簽人或接手合約</td>
+                  <td><span class="chip is-coral">第一 Apron ($209.015M)</span></td>
+                </tr>
+                <tr>
+                  <td class="num"><strong>B</strong></td>
+                  <td>使用非豪華稅球隊中產例外（Non-Taxpayer MLE）</td>
+                  <td><span class="chip is-coral">第一 Apron ($209.015M)</span></td>
+                </tr>
+                <tr>
+                  <td class="num"><strong>C</strong></td>
+                  <td>透過先簽後換（Sign-and-Trade）接手球員</td>
+                  <td><span class="chip is-coral">第一 Apron ($209.015M)</span></td>
+                </tr>
+                <tr>
+                  <td class="num"><strong>E</strong></td>
+                  <td>使用 Expanded TPE（且超過第一 Apron 後 $25 萬寬限歸零）</td>
+                  <td><span class="chip is-coral">第一 Apron ($209.015M)</span></td>
+                </tr>
+                <tr>
+                  <td class="num"><strong>H</strong></td>
+                  <td>合併送出多名球員薪資（Aggregated Standard TPE）</td>
+                  <td><span class="chip is-error">第二 Apron ($221.686M)</span></td>
+                </tr>
+                <tr>
+                  <td class="num"><strong>I</strong></td>
+                  <td>在交易中附帶現金（Cash）給其他球隊</td>
+                  <td><span class="chip is-error">第二 Apron ($221.686M)</span></td>
+                </tr>
+                <tr>
+                  <td class="num"><strong>K</strong></td>
+                  <td>使用豪華稅球隊中產例外（Taxpayer MLE）簽人</td>
+                  <td><span class="chip is-error">第二 Apron ($221.686M)</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p style="font-size: 0.85rem;">註：表 E 至 J 列在例行賽結束後、薪資帽年度結束前，尚須額外對照下一薪資帽年度的薪資與門檻；觸發交易限制表後，該季剩餘期間皆受該門檻約束。</p>
+        </div>
+
+        <div class="panel insight-list">
+          <div class="mono-label">ECOSYSTEM CONSEQUENCES</div>
+          <div class="insight-item is-coral">
+            <h4>中產老將的「要嘛底薪、要嘛失業」困境</h4>
+            <p>過去爭冠隊可用迷你中產簽下 $500–$800 萬級距的優質老將；如今第二層直接禁用迷你中產，第一層以上又禁止簽下原薪資高於全額中產的買斷球員（禁上車條款），使非頂薪中產老將空間大幅萎縮。2026 年夏季 37 歲的 Russell Westbrook（前季在國王仍有場均 15.2 分、6.7 助攻）選擇退休時，其經紀人 Jeff Schwartz 便直指現行兩道 Apron 讓各隊投資老將綁手綁腳。</p>
+          </div>
+
+          <div class="insight-item is-amber">
+            <h4>兩極化配置與「布朗森降薪模式」</h4>
+            <p>各隊薪資逐步走向極端：保留 2 至 3 名 30%–35% 頂薪球星後，其餘輪替全部仰賴首輪新秀紅利、每隊 3 席的雙向合約或老將底薪。部分當打之年球星（如尼克隊 Jalen Brunson）選擇提前簽下低於頂薪上限的延長約為球隊降壓；老將如 Kevin Love 則轉型為低薪功能性替補與休息室導師。</p>
+          </div>
+
+          <div class="insight-item is-sage">
+            <h4>未來 CBA 改革討論：母隊忠誠折扣</h4>
+            <p>面對中產階層被犧牲的副作用，球員工會與專家已開始討論未來微調方向：例如讓母隊自己選秀培養 7 至 10 年的老將在續約時享有「硬上限帳面折扣」（如實領 3,500 萬、計算 Apron 只算 2,500 萬），或將超級頂薪（Supermax）激勵獎金排除於第二層懲罰區外。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ SECTION 6: FAQ & SOURCES ═══════════════════════════════════════ -->
+    <section class="section-block" aria-labelledby="faq-heading">
+      <div class="section-header">
+        <span class="section-eyebrow">06 · QUICK REFERENCE FAQ</span>
+        <h2 id="faq-heading">看懂補強新聞前，先釐清四個最常見的制度誤解</h2>
+      </div>
+
+      <div class="faq-list">
+        <details class="faq-item" open>
+          <summary>NBA 的薪資帽是不能超過的「硬性上限」嗎？</summary>
+          <p>不是。與 NFL、NHL 的硬性上限不同，NBA 採用軟性薪資帽（Soft Cap），允許球隊透過鳥權、中產例外、交易特例或既有的合法合約承諾超過帽線。但超帽並非任意簽約，仍須嚴格符合各項例外本身的額度、合約年限與 Apron 約束條件。</p>
+        </details>
+
+        <details class="faq-item">
+          <summary>超過第一層或第二層硬上限，就完全不能簽約與交易嗎？</summary>
+          <p>不是「一律禁止」，而是針對「特定操作」設限。例如超過第二層後仍可使用老將底薪續補名單，也能用大鳥權續約自家球員（只要接受後續稅負與選秀權風險）；但你無法使用迷你中產、不能打包多名球員湊薪資換大合約、也不能在交易中付現金或接手先簽後換球員。</p>
+        </details>
+
+        <details class="faq-item">
+          <summary>球隊只要季中某一天超過第二層硬上限，就會被凍結選秀權嗎？</summary>
+          <p>不會。CBA 所稱的「Second Apron Team」，是以該隊在<strong>當年度最後一場例行賽開賽時</strong>的 Apron Team Salary 是否超過第二層為準，季中短暫超線不算。一旦於規定時點符合定義，就會先凍結「7 年後」那張特定年份的首輪籤（例如 2024–25 觸發凍結 2032 年首輪籤）；其後 4 年內若另有至少 2 年再超線，該籤才會被強制移至首輪第 30 順位。若後續未再超線，亦有條文規定的解凍條件。</p>
+        </details>
+
+        <details class="faq-item">
+          <summary>豪華稅的罰款都會全部平均分給沒繳稅的球隊嗎？</summary>
+          <p>不一定。2023 CBA 授權 NBA <strong>可選擇</strong>將至多 50% 的豪華稅款依條件分配給一支或多支未繳稅球隊，其餘則用於聯盟選定用途；條文寫的是「可以」而非每年必定固定全數均分。</p>
+        </details>
+      </div>
+    </section>
+
+    <footer class="sources-footer">
+      <div class="mono-label">SOURCES &amp; METHODOLOGY ATTRIBUTION</div>
+      <p>
+        本簡報整理自公開勞資協議規則與運動財經數據解析：NBA 2026–27 與 2025–26 官方薪資上限公告（每年 6 月 30 日發布）、2023 NBA 勞資協議（CBA Article I、Article VII §2(d)–(f)、§6）、籃球數據誌〈NBA 薪資帽能超過嗎？帽線、稅線與 2 道 apron 怎麼看〉（2026/09）、運動視界〈從 NBA「大三元製造機」Russell Westbrook 退休談新版勞資協議對老將壓迫問題和制度解法〉（2026/08）、Dcard NBA 板〈中產合約與硬上限介紹〉（2025/07）以及維基百科〈NBA 薪資上限〉條目。模擬器內涉及稅額估算僅採用 CBA 條文假設級距作教學示範，實際帳務須依各隊特定日期的 Team Salary、Tax Team Salary 與 Apron Team Salary 精算為準。
+      </p>
+    </footer>
+  </div>
+
+  <script>
+    // ═══ [1] SCROLLYTELLING STEPS DATA ═══════════════════════════════════
+    const STEPS = [
+      {
+        zoneTitle: `區間 1：低於薪資帽 ($150.0M 示例)`,
+        zoneBadge: `空間運作區`,
+        badgeClass: `is-cyan`,
+        payroll: 150.0,
+        barColor: `var(--data-1)`,
+        mle: `空間中產 ($9.366M)`,
+        tax: `免繳豪華稅`,
+        trade: `可用 Cap Space 吃約`,
+        title: `低於帽線：用純薪資空間買進戰力，但仍有 90% 底線`,
+        body: `當團隊薪資低於 $164.961M 時，球隊擁有「薪資帽空間（Cap Space）」可直接簽下自由球員或單邊吃進交易合約。等到把剩餘空間全部用滿並達到帽線後，還可啟用 $9.366M 的空間中產（Room MLE）。同時為保障球員分潤，每隊至少須花費薪資帽的 90%（俗稱窮人稅線），未達標者差額須發給隊內球員。`,
+        pills: [
+          { text: `Cap Space 可直接簽約`, cls: `is-cyan` },
+          { text: `空間中產 $9.366M`, cls: `is-sage` },
+          { text: `須達 90% 薪資底線`, cls: `` }
+        ]
+      },
+      {
+        zoneTitle: `區間 2：帽線至稅線之間 ($185.0M 示例)`,
+        zoneBadge: `軟性超帽區`,
+        badgeClass: `is-sage`,
+        payroll: 185.0,
+        barColor: `var(--data-2)`,
+        mle: `全額中產 ($15.044M)`,
+        tax: `免繳豪華稅`,
+        trade: `全數例外皆可運作`,
+        title: `跨越薪資帽：軟性制度與「鳥權」才是超帽的合法通行證`,
+        body: `NBA 是軟性薪資帽，過了 $164.961M 並非不能簽人，而是不能再用「空出來的空間」，改靠既有的例外條款：例如用「大鳥條款」無視帽線續約自家效力滿 3 年的球星、用新秀條款簽下選秀新人，或使用高達 $15.044M 的非豪華稅中產（全額中產）補強即戰力。`,
+        pills: [
+          { text: `鳥權續約無上限`, cls: `is-sage` },
+          { text: `全額中產 $15.044M`, cls: `is-cyan` },
+          { text: `雙年例外可用`, cls: `is-sage` }
+        ]
+      },
+      {
+        zoneTitle: `區間 3：超過稅線但未破第一層 ($205.0M 甲隊)`,
+        zoneBadge: `繳稅但未鎖死`,
+        badgeClass: `is-amber`,
+        payroll: 205.0,
+        barColor: `var(--data-3)`,
+        mle: `全額中產可用 (須控在 $209M 下)`,
+        tax: `須依超額分級繳稅`,
+        trade: `仍可先簽後換接手`,
+        title: `突破豪華稅線：開始付錢給聯盟，但還沒碰到第一層紅線`,
+        body: `2026–27 稅線為帽線的 121.5%（$200.428M）。關鍵觀念：願意繳稅與「能不能做某筆補強」是兩道獨立檢查！像假設甲隊操作後達 $205M，雖然超過稅線必須繳稅，但只要操作後不超過 $209.015M 的第一層硬上限，依然有資格使用 $15.044M 的全額中產。`,
+        pills: [
+          { text: `Tax > $200.428M 須課稅`, cls: `is-amber` },
+          { text: `全額中產仍合規`, cls: `is-sage` },
+          { text: `豪華稅中產反而不符條件`, cls: `` }
+        ]
+      },
+      {
+        zoneTitle: `區間 4：第一層與第二層之間 ($212.0M 乙隊)`,
+        zoneBadge: `第一層受限區`,
+        badgeClass: `is-coral`,
+        payroll: 212.0,
+        barColor: `var(--data-4)`,
+        mle: `僅剩迷你中產 ($6.064M)`,
+        tax: `累進稅負加重`,
+        trade: `禁用先簽後換、禁簽高薪買斷`,
+        title: `觸及第一層硬上限：補強工具砍半，只剩 $6.064M 迷你中產`,
+        body: `一旦跨越 $209.015M，交易限制表 A 至 E 列立即生效：禁用全額中產、禁用雙年例外、禁止透過先簽後換接手球員、交易特例原有的 $25 萬寬限歸零，也不得在買斷市場簽下原薪高於全額中產的球員。此時僅能動用 $6.064M 的豪華稅中產，且操作後不能衝破第二層。`,
+        pills: [
+          { text: `禁全額中產 / 先簽後換`, cls: `is-coral` },
+          { text: `迷你中產 $6.064M 可用`, cls: `is-amber` },
+          { text: `買斷禁上車條款啟動`, cls: `is-coral` }
+        ]
+      },
+      {
+        zoneTitle: `區間 5：衝破第二層硬上限 ($225.0M 丙隊)`,
+        zoneBadge: `Second Apron 紅區`,
+        badgeClass: `is-error`,
+        payroll: 225.0,
+        barColor: `var(--error)`,
+        mle: `所有中產例外全面禁用`,
+        tax: `高額累進豪華稅`,
+        trade: `禁打包 / 禁現金 / 凍結首輪籤`,
+        title: `超過第二層硬上限：失去彈性與 7 年後首輪選秀權`,
+        body: `突破 $221.686M 後，連 $6.064M 的迷你中產也被沒收，並禁止在交易中打包多名球員湊薪資、禁止附帶現金。若球隊在例行賽最後一場開賽時仍高於此線，就會凍結 7 年後的首輪籤交易權；若接下來 4 年內再犯 2 次，該首輪籤將強制貶至首輪最後的第 30 順位。`,
+        pills: [
+          { text: `禁用一切中產特例`, cls: `is-error` },
+          { text: `禁止打包球員 / 付現金`, cls: `is-error` },
+          { text: `7 年後首輪籤凍結風險`, cls: `is-error` }
+        ]
+      }
+    ];
+
+    // ═══ [2] RULES EXPLORER DATA ═════════════════════════════════════════
+    const RULES_DATA = {
+      mle: [
+        {
+          title: `非豪華稅球隊中產例外`,
+          en: `Non-Taxpayer MLE (全額中產)`,
+          amount: `$15.044M`,
+          badge: `觸發第一層硬上限`,
+          badgeCls: `is-coral`,
+          meta: `2026–27 官方額度 · 最長 4 年 · 可拆分簽約`,
+          desc: `適用於薪資介於帽線與第一層硬上限（$209.015M）之間的球隊。使用後當季團隊薪資將被硬性鎖死在第一層之下，實務上球隊若距離第一層太近，往往不會用滿以免卡死季中交易彈性。`,
+          example: `實例參考：2025–26 賽季湖人隊拆分當時約 $14M 的全額中產，分別以 $8.1M 簽下 Deandre Ayton、$5.8M 簽下 Jake LaRavia。`
+        },
+        {
+          title: `豪華稅球隊中產例外`,
+          en: `Taxpayer MLE (迷你中產)`,
+          amount: `$6.064M`,
+          badge: `不得超過第二層`,
+          badgeCls: `is-amber`,
+          meta: `2026–27 官方額度 · 最長 3 年 · 高於第一層才可用`,
+          desc: `使用後球隊的 Apron Team Salary 必須高於第一層（$209.015M），但絕不能超過第二層（$221.686M）。自 2024–25 起，一旦在同個薪資帽年度使用此例外，即不可再進行交易限制表 A 至 F 列操作。`,
+          example: `實例參考：2025–26 賽季達拉斯獨行俠即使用當時約 $5.7M 的迷你中產簽下控衛 D'Angelo Russell。`
+        },
+        {
+          title: `空間球隊中產例外`,
+          en: `Room Mid-Level Exception`,
+          amount: `$9.366M`,
+          badge: `帽下空間隊專用`,
+          badgeCls: `is-cyan`,
+          meta: `2026–27 官方額度 · 最長 2 年 · 空間用完後啟用`,
+          desc: `專屬於開季前低於薪資帽（$164.961M）、並已將所有剩餘薪資空間使用完畢的球隊，作為最後一筆中產等級補強工具；使用時無法與全額中產或雙年例外並用。`,
+          example: `實例參考：2023 年擁有大量空間的火箭隊在簽下 Fred VanVleet 與 Dillon Brooks 用盡空間後，再以空間中產簽下老將 Jeff Green。`
+        },
+        {
+          title: `雙年例外`,
+          en: `Bi-Annual Exception (BAE)`,
+          amount: `~$4.7M+`,
+          badge: `觸發第一層硬上限`,
+          badgeCls: `is-coral`,
+          meta: `每兩年可用一次 · 最長 2 年 · 不可連續兩季使用`,
+          desc: `俗稱百萬條款（因 1998–99 起薪剛好 $1M 得名）。前提是球隊前一個賽季並未使用此條款，且僅限低於第一層硬上限的球隊動用；一旦使用同樣會觸發第一層硬上限鎖定。`,
+          example: `實例參考：2024 年快艇隊以約 $4.7M 的雙年條款簽回法國前鋒 Nicolas Batum。`
+        }
+      ],
+      bird: [
+        {
+          title: `大鳥條款（賴瑞柏德條款）`,
+          en: `Larry Bird Exception`,
+          amount: `無金額天花板`,
+          badge: `效力滿 3 年未離隊`,
+          badgeCls: `is-sage`,
+          meta: `續約母隊球員 · 可簽至頂薪 · 合約最長 5 年`,
+          desc: `只要球員在同一支球隊連續效力滿 3 個賽季（期間未進入自由球員市場且未被揮棄，交易轉隊可繼承鳥權），母隊即可無視薪資帽限制開出最高頂薪續約，旨在保護母隊留住自己培養的核心球星。`,
+          example: `實務影響：若球隊為了留住三名鳥權球星而爆破第二層硬上限，制度本身並不禁止續約，但後續會面對嚴厲稅負與補強封鎖。`
+        },
+        {
+          title: `早鳥條款與非鳥條款`,
+          en: `Early Bird / Non-Bird Rights`,
+          amount: `較前薪漲幅上限`,
+          badge: `效力 1–2 年`,
+          badgeCls: `is-cyan`,
+          meta: `早鳥：2 年不進 FA · 合約限定 2 至 5 年`,
+          desc: `效力滿 2 年適用早鳥條款（Early Bird），起薪與漲幅低於大鳥，且合約年限須介於 2 至 5 年之間；僅效力 1 年則適用非鳥條款（Non-Bird），提供基本比例的續約空間。`,
+          example: `設計用意：早鳥與中產架構也用來確保母隊在匹配受限自由球員（如亞瑞納斯條款下）時握有足夠的合法薪資工具。`
+        },
+        {
+          title: `雙向合約與 Exhibit 10`,
+          en: `Two-Way & Exhibit 10`,
+          amount: `不計入薪資帽`,
+          badge: `每隊開放 3 名額`,
+          badgeCls: `is-sage`,
+          meta: `G 聯盟與 NBA 雙棲 · 2023 CBA 增至 3 席`,
+          desc: `雙向合約薪資完全不計入團隊薪資上限，讓球隊能培養邊緣潛力股而免於被挖角。帶有 Exhibit 10 條款的球員若被裁後待滿所屬發展聯盟滿 60 天，可獲得 $5,000 至 $50,000 獎金，且開季前可轉正為雙向合約。`,
+          example: `戰術趨勢：在 Second Apron 擠壓下，越來越多爭冠隊直接用 3 個雙向名額填補板凳末端深度，取代高價老將。`
+        },
+        {
+          title: `交易特例與傷兵特例`,
+          en: `TPE & DPE`,
+          amount: `依送出 / 傷兵薪資定`,
+          badge: `受 Apron 高度制約`,
+          badgeCls: `is-amber`,
+          meta: `超第一層時 TPE $25 萬寬限歸零`,
+          desc: `球隊在不等值交易送出較高薪資後可產生交易特例（TPE），供未來補進合約；但只要操作後超過第一層硬上限，TPE 原本的 25 萬美元寬限即歸零，也禁用擴張版 TPE。傷兵特例（DPE）則供主力遭遇賽季報銷級重傷時申請替補名額。`,
+          example: `檢查要點：使用表 E（Expanded TPE）會受第一層硬上限限制；表 H（合併多名球員交易）則受第二層硬上限封鎖。`
+        }
+      ],
+      market: [
+        {
+          title: `頂薪階梯與德瑞克·羅斯條款`,
+          en: `Max Tiers & Derrick Rose Rule`,
+          amount: `25% / 30% / 35%`,
+          badge: `依年資與榮譽決定`,
+          badgeCls: `is-cyan`,
+          meta: `≤6 年 25% · 7–9 年 30% · ≥10 年 35%`,
+          desc: `個人頂薪起薪依聯盟年資分三級（或前一年薪資 105% 取高者）。若年資 6 年以下的新秀達標「羅斯條款」（如入選 2 次全明星、2 次最佳陣容或獲得 1 次 MVP），即可跳級簽下佔薪資帽 30% 的頂薪。`,
+          example: `歷史代表：Derrick Rose、Kevin Durant、Paul George 與 Blake Griffin 皆曾受惠於此條款簽下 30% 新秀頂薪延長約。`
+        },
+        {
+          title: `先簽後換協議`,
+          en: `Sign-and-Trade`,
+          amount: `最少簽 3 年`,
+          badge: `接手方禁超第一層`,
+          badgeCls: `is-coral`,
+          meta: `限母隊球員 · 須開季前完成 · 48 小時內送出`,
+          desc: `先簽後換須滿足四要件：只能與自家球員簽約、合約至少 3 年、須於例行賽首戰前完成，且簽約 48 小時內未完成交易則合約失效。最關鍵限制是「接手球員的那一方」操作後不得超過第一層硬上限。`,
+          example: `常見新聞解讀：當媒體報導某豪門無法透過先簽後換搶大咖，往往就是因為接手後會被鎖在 $209.015M 第一層之下。`
+        },
+        {
+          title: `受限自由球員與毒藥防制`,
+          en: `RFA, QO & Arenas Rule`,
+          amount: `3 天跟進決定期`,
+          badge: `母隊有優先匹配權`,
+          badgeCls: `is-sage`,
+          meta: `資質報價 QO 啟動 · 亞瑞納斯條款保護次輪秀`,
+          desc: `首輪新秀須執行完第 3、4 年球隊選項並開出資質報價（QO）才會成為受限自由球員；他隊提供邀請報價（至少 2 年）後，母隊有 3 天時間跟進。2017 年改制後也允許母隊在符合條件時以合約平均薪資計費，防堵早期如林書豪合約般的「毒藥條款」。`,
+          example: `條款由來：2003 年勇士因規則限制無力匹配次輪秀 Gilbert Arenas 的報價，促使聯盟增設亞瑞納斯條款。`
+        },
+        {
+          title: `七月凍結期`,
+          en: `July Moratorium Period`,
+          amount: `7/1 – 7/6`,
+          badge: `口頭協議無約束力`,
+          badgeCls: `is-amber`,
+          meta: `美東 7/1 00:01 至 7/6 12:00 · 約 5 天`,
+          desc: `每年自由市場開啟後有一段結算新季薪資帽的凍結期。期間多數大咖只能達成「口頭協議」，僅允許簽署首輪新秀約、底薪、雙向合約或接受 QO 等特定運作。`,
+          example: `歷史轉折：2015 年 DeAndre Jordan 口頭承諾加盟獨行俠卻在凍結期後反悔續留快艇，促使聯盟將凍結期從 10 天縮短至 5 天。`
+        }
+      ]
+    };
+
+    // ═══ RENDER SCROLLYTELLING STEPS & GRAPHIC ════════════════════════════
+    function buildGraphic() {
+      const stepsEl = document.getElementById('steps');
+      if (!stepsEl) return;
+      stepsEl.innerHTML = '';
+      STEPS.forEach(function (s, i) {
+        const pillsHtml = s.pills.map(function (p) {
+          return `<span class="chip ${p.cls}">${p.text}</span>`;
+        }).join('');
+        stepsEl.insertAdjacentHTML('beforeend',
+          `<div class="step" data-step="${i}" onclick="activateStep(${i})">` +
+            `<div class="step-card">` +
+              `<div class="step-idx">STEP ${i + 1} / ${STEPS.length} · ${s.zoneBadge}</div>` +
+              `<h3>${s.title}</h3>` +
+              `<p>${s.body}</p>` +
+              `<div class="step-pills">${pillsHtml}</div>` +
+            `</div>` +
+          `</div>`
+        );
+      });
+    }
+
+    function payrollToSvgY(millions) {
+      // Maps $135M (bottom y=288) to $238M (top y=22) smoothly aligned with fixed threshold lines
+      const clamped = Math.max(135, Math.min(238, millions));
+      const knots = [
+        { m: 135, y: 288 },
+        { m: 164.961, y: 218 },
+        { m: 200.428, y: 156 },
+        { m: 209.015, y: 114 },
+        { m: 221.686, y: 70 },
+        { m: 238, y: 22 }
+      ];
+      for (let k = 0; k < knots.length - 1; k++) {
+        if (clamped >= knots[k].m && clamped <= knots[k + 1].m) {
+          const t = (clamped - knots[k].m) / (knots[k + 1].m - knots[k].m);
+          return knots[k].y + t * (knots[k + 1].y - knots[k].y);
+        }
+      }
+      return 288;
+    }
+
+    function renderGraphic(i) {
+      const s = STEPS[i];
+      if (!s) return;
+
+      const titleEl = document.getElementById('gauge-zone-title');
+      const badgeEl = document.getElementById('gauge-zone-badge');
+      const mleEl = document.getElementById('gauge-mle');
+      const taxEl = document.getElementById('gauge-tax');
+      const tradeEl = document.getElementById('gauge-trade');
+
+      if (titleEl) titleEl.textContent = s.zoneTitle;
+      if (badgeEl) {
+        badgeEl.textContent = s.zoneBadge;
+        badgeEl.className = `chip ${s.badgeClass}`;
+      }
+      if (mleEl) mleEl.textContent = s.mle;
+      if (taxEl) taxEl.textContent = s.tax;
+      if (tradeEl) tradeEl.textContent = s.trade;
+
+      for (let b = 0; b < 5; b++) {
+        const band = document.getElementById(`zone-band-${b}`);
+        if (band) band.setAttribute('opacity', b === i ? '0.88' : '0.14');
+      }
+
+      const targetY = payrollToSvgY(s.payroll);
+      const barFill = document.getElementById('gauge-bar-fill');
+      const pLine = document.getElementById('gauge-pointer-line');
+      const pDot = document.getElementById('gauge-pointer-dot');
+      const pVal = document.getElementById('gauge-pointer-val');
+
+      if (barFill) {
+        barFill.setAttribute('y', targetY.toFixed(1));
+        barFill.setAttribute('height', Math.max(8, 286 - targetY).toFixed(1));
+        barFill.setAttribute('fill', s.barColor);
+      }
+      if (pLine) {
+        pLine.setAttribute('y1', targetY.toFixed(1));
+        pLine.setAttribute('y2', targetY.toFixed(1));
+      }
+      if (pDot) {
+        pDot.setAttribute('cy', targetY.toFixed(1));
+      }
+      if (pVal) {
+        pVal.setAttribute('y', (targetY + 4).toFixed(1));
+        pVal.textContent = `$${s.payroll.toFixed(1)}M`;
+      }
+    }
+
+    function activateStep(i) {
+      const nodes = document.querySelectorAll('.scrolly .step');
+      nodes.forEach(function (n) { n.classList.remove('is-active'); });
+      if (nodes[i]) nodes[i].classList.add('is-active');
+      renderGraphic(i);
+    }
+
+    // ═══ SIMULATOR HANDLERS (DUAL-INPUT SAFE) ════════════════════════════
+    function syncPayrollFromSlider(val) {
+      const numEl = document.getElementById('input-payroll');
+      if (numEl) numEl.value = val;
+      clearPresetActive();
+      updateSimulator();
+    }
+
+    function syncPayrollFromNumber(val) {
+      const parsed = parseFloat(val);
+      if (Number.isNaN(parsed)) return;
+      const clamped = Math.max(140, Math.min(245, parsed));
+      const sliderEl = document.getElementById('slider-payroll');
+      if (sliderEl) sliderEl.value = clamped;
+      clearPresetActive();
+      updateSimulator();
+    }
+
+    function clearPresetActive() {
+      document.querySelectorAll('.preset-row .btn').forEach(function (b) {
+        b.classList.remove('is-active');
+      });
+    }
+
+    function applyPreset(payroll, isRepeater, usedTaxMle, btnEl) {
+      const sliderEl = document.getElementById('slider-payroll');
+      const numEl = document.getElementById('input-payroll');
+      const repEl = document.getElementById('chk-repeater');
+      const taxMleEl = document.getElementById('chk-used-tax-mle');
+
+      if (sliderEl) sliderEl.value = payroll;
+      if (numEl) numEl.value = payroll;
+      if (repEl) repEl.checked = isRepeater;
+      if (taxMleEl) taxMleEl.checked = usedTaxMle;
+
+      clearPresetActive();
+      if (btnEl) btnEl.classList.add('is-active');
+      updateSimulator();
+    }
+
+    function updateSimulator() {
+      const numEl = document.getElementById('input-payroll');
+      const repEl = document.getElementById('chk-repeater');
+      const usedTaxMleEl = document.getElementById('chk-used-tax-mle');
+      if (!numEl) return;
+
+      let p = parseFloat(numEl.value);
+      if (Number.isNaN(p)) p = 205;
+      p = Math.max(140, Math.min(245, p));
+
+      const isRepeater = repEl ? repEl.checked : false;
+      const usedTaxMle = usedTaxMleEl ? usedTaxMleEl.checked : false;
+
+      // 2026-27 Official Constants
+      const CAP = 164.961;
+      const TAX = 200.428;
+      const APRON_1 = 209.015;
+      const APRON_2 = 221.686;
+
+      const dispEl = document.getElementById('sim-payroll-display');
+      const zoneChipEl = document.getElementById('sim-zone-chip');
+      const summaryEl = document.getElementById('sim-summary-text');
+      const meterFillEl = document.getElementById('sim-meter-fill');
+
+      if (dispEl) dispEl.textContent = `$${p.toFixed(3)}M`;
+
+      const pct = Math.max(4, Math.min(100, ((p - 140) / (245 - 140)) * 100));
+      if (meterFillEl) meterFillEl.style.width = `${pct.toFixed(1)}%`;
+
+      let zoneText = ``;
+      let zoneCls = `is-cyan`;
+      let meterColor = `var(--data-1)`;
+      let summaryText = ``;
+
+      if (p < CAP) {
+        zoneText = `帽下空間區 (< $164.961M)`;
+        zoneCls = `is-cyan`;
+        meterColor = `var(--data-1)`;
+        summaryText = `目前尚有 $${(CAP - p).toFixed(3)}M 薪資帽空間可直接簽人；注意團隊總薪資須達帽線 90%（$${(CAP * 0.9).toFixed(3)}M）以免支付窮人稅給隊內球員。`;
+      } else if (p <= TAX) {
+        zoneText = `軟性超帽區・未過稅線`;
+        zoneCls = `is-sage`;
+        meterColor = `var(--data-2)`;
+        summaryText = `球隊已透過鳥權或例外超帽，但距 $200.428M 豪華稅線尚有 $${(TAX - p).toFixed(3)}M 緩衝，全額中產與各類交易操作皆未受兩道 Apron 鎖死。`;
+      } else if (p <= APRON_1) {
+        zoneText = `超稅線・未達第一層 Apron`;
+        zoneCls = `is-amber`;
+        meterColor = `var(--data-3)`;
+        summaryText = `團隊已超過 $200.428M 豪華稅線須繳納豪華稅，但尚未觸及 $209.015M 第一層硬上限（同假設甲隊處境）：仍具備使用全額中產（$15.044M）及先簽後換接手球員的資格。`;
+      } else if (p <= APRON_2) {
+        zoneText = `介於第一層與第二層之間`;
+        zoneCls = `is-coral`;
+        meterColor = `var(--data-4)`;
+        summaryText = `已突破 $209.015M 第一層硬上限（同假設乙隊處境）：全額中產、雙年例外、先簽後換接手與高薪買斷球員全數禁止；但仍可使用 $6.064M 豪華稅中產，並可打包多名球員交易。`;
+      } else {
+        zoneText = `突破第二層硬上限 (Second Apron)`;
+        zoneCls = `is-error`;
+        meterColor = `var(--error)`;
+        summaryText = `已衝破 $221.686M 終極紅線（同假設丙隊處境）：所有中產特例全面禁用、禁止打包多名球員交易、禁止交易中附帶現金，且例行賽末場維持此水位將凍結 7 年後首輪選秀權。`;
+      }
+
+      if (zoneChipEl) {
+        zoneChipEl.textContent = zoneText;
+        zoneChipEl.className = `chip ${zoneCls}`;
+      }
+      if (meterFillEl) meterFillEl.style.backgroundColor = meterColor;
+      if (summaryEl) summaryEl.textContent = summaryText;
+
+      // Evaluate 8 transaction rules
+      const canNonTaxMle = p <= APRON_1 && !usedTaxMle;
+      const canTaxMle = p > APRON_1 && p <= APRON_2;
+      const canRoomMle = p <= CAP;
+      const canBae = p <= APRON_1 && !usedTaxMle;
+      const canSignAndTradeIn = p <= APRON_1 && !usedTaxMle;
+      const canAggregate = p <= APRON_2;
+      const canSendCash = p <= APRON_2;
+      const canBuyout = p <= APRON_1;
+
+      const checks = [
+        {
+          name: `全額中產 ($15.044M)`,
+          ok: canNonTaxMle,
+          status: canNonTaxMle ? `允許 (鎖 1st)` : `禁止`,
+          cls: canNonTaxMle ? `is-sage` : `is-error`,
+          reason: usedTaxMle ? `本季已用豪華稅中產，依規定禁用限制表 A–F 列。` : (p <= APRON_1 ? `操作後不超 $209.015M 即可用。` : `已超過第一層硬上限 ($209.015M)。`)
+        },
+        {
+          name: `迷你中產 ($6.064M)`,
+          ok: canTaxMle,
+          status: canTaxMle ? `允許` : (p <= APRON_1 ? `不適用` : `禁止`),
+          cls: canTaxMle ? `is-amber` : (p <= APRON_1 ? `` : `is-error`),
+          reason: p <= APRON_1 ? `CBA 規定須「高於」第一層且不超第二層方符合資格。` : (p <= APRON_2 ? `符合高於 1st 且未超 2nd 條件；用後禁用 A–F 列。` : `已超過第二層硬上限 ($221.686M)。`)
+        },
+        {
+          name: `空間中產 ($9.366M)`,
+          ok: canRoomMle,
+          status: canRoomMle ? `空間用完可用` : `不適用`,
+          cls: canRoomMle ? `is-cyan` : ``,
+          reason: canRoomMle ? `低於薪資帽球隊將空間用滿至帽線後可啟用。` : `已超過 $164.961M 薪資帽，須改用其他中產。`
+        },
+        {
+          name: `雙年例外 (BAE)`,
+          ok: canBae,
+          status: canBae ? `允許 (限兩年一次)` : `禁止`,
+          cls: canBae ? `is-sage` : `is-error`,
+          reason: usedTaxMle ? `本季已使用豪華稅中產，禁用表 A 操作。` : (p <= APRON_1 ? `前季未使用且操作後未超第一層即可動用。` : `已超過第一層硬上限 ($209.015M)。`)
+        },
+        {
+          name: `先簽後換接手球員`,
+          ok: canSignAndTradeIn,
+          status: canSignAndTradeIn ? `允許 (觸發 1st)` : `禁止`,
+          cls: canSignAndTradeIn ? `is-sage` : `is-error`,
+          reason: usedTaxMle ? `已使用豪華稅中產，禁用表 C 操作。` : (p <= APRON_1 ? `接手方須將當季薪資鎖在第一層之下。` : `超過第一層即禁止透過先簽後換接手。`)
+        },
+        {
+          name: `打包多名球員交易`,
+          ok: canAggregate,
+          status: canAggregate ? `允許` : `禁止 (僅限單換)`,
+          cls: canAggregate ? `is-sage` : `is-error`,
+          reason: canAggregate ? `未突破第二層，可聚合多名球員薪資匹配交易。` : `觸及限制表 H 列，禁止合併送出薪資。`
+        },
+        {
+          name: `交易中附帶現金`,
+          ok: canSendCash,
+          status: canSendCash ? `允許` : `禁止`,
+          cls: canSendCash ? `is-sage` : `is-error`,
+          reason: canSendCash ? `未達第二層，可在交易中付現金給他隊。` : `觸及限制表 I 列，禁止在交易中付現金。`
+        },
+        {
+          name: `簽高薪買斷老將`,
+          ok: canBuyout,
+          status: canBuyout ? `允許` : `禁止 (禁上車)`,
+          cls: canBuyout ? `is-sage` : `is-error`,
+          reason: canBuyout ? `未達第一層，可網羅季中買斷的資深即戰力。` : `高於第一層禁止簽下原薪高於全額中產的買斷球員。`
+        }
+      ];
+
+      const matrixEl = document.getElementById('sim-matrix');
+      if (matrixEl) {
+        matrixEl.innerHTML = checks.map(function (c) {
+          return `<div class="matrix-cell">` +
+            `<div class="matrix-cell-top">` +
+              `<span class="matrix-name">${c.name}</span>` +
+              `<span class="chip ${c.cls}">${c.status}</span>` +
+            `</div>` +
+            `<div class="matrix-reason">${c.reason}</div>` +
+          `</div>`;
+        }).join('');
+      }
+
+      // Tax & Draft Pick risk readout
+      const taxValEl = document.getElementById('sim-tax-val');
+      const taxNoteEl = document.getElementById('sim-tax-note');
+      const pickValEl = document.getElementById('sim-pick-val');
+      const pickNoteEl = document.getElementById('sim-pick-note');
+
+      if (p <= TAX) {
+        if (taxValEl) {
+          taxValEl.textContent = `$0M (免課稅)`;
+          taxValEl.style.color = `var(--tertiary)`;
+        }
+        if (taxNoteEl) taxNoteEl.textContent = `低於 $200.428M 豪華稅線，無須繳納豪華稅，並有機會參與未繳稅球隊分潤。`;
+      } else {
+        const overage = p - TAX;
+        // Illustrative educational tax calculation based on CBA hypothetical $6M bracket widths
+        let estTax = 0;
+        let rem = overage;
+        const b1 = Math.min(rem, 6);
+        estTax += b1 * (isRepeater ? 3.0 : 1.0);
+        rem -= b1;
+        if (rem > 0) {
+          const b2 = Math.min(rem, 6);
+          estTax += b2 * (isRepeater ? 3.25 : 1.25);
+          rem -= b2;
+        }
+        if (rem > 0) {
+          estTax += rem * (isRepeater ? 5.5 : 3.5);
+        }
+        if (taxValEl) {
+          taxValEl.textContent = `超線 $${overage.toFixed(2)}M · 教學試算 ~$${estTax.toFixed(2)}M`;
+          taxValEl.style.color = isRepeater ? `var(--error)` : `var(--data-3)`;
+        }
+        if (taxNoteEl) {
+          taxNoteEl.textContent = isRepeater
+            ? `已勾選累犯稅率（首級每 $1 課 $3 起跳）；試算採 CBA 假設 $6M 級距寬度作示意。`
+            : `標準稅率（2025–26 起首級每 $1 課 $1）；試算採 CBA 假設 $6M 級距寬度作示意。`;
+        }
+      }
+
+      if (p > APRON_2) {
+        if (pickValEl) {
+          pickValEl.textContent = `7 年後首輪籤凍結`;
+          pickValEl.style.color = `var(--error)`;
+        }
+        if (pickNoteEl) {
+          pickNoteEl.textContent = `若例行賽末場開賽時維持超線，即凍結 7 年後首輪籤交易權；未來 4 年內再犯 2 年將降至第 30 順位。`;
+        }
+      } else {
+        if (pickValEl) {
+          pickValEl.textContent = `未觸發首輪凍結`;
+          pickValEl.style.color = `var(--tertiary)`;
+        }
+        if (pickNoteEl) {
+          pickNoteEl.textContent = `未突破 $221.686M 第二層硬上限，遠期首輪選秀權可正常作為交易籌碼。`;
+        }
+      }
+    }
+
+    // ═══ RULES FILTER HANDLER ════════════════════════════════════════════
+    function filterRules(category, btnEl) {
+      document.querySelectorAll('.filter-bar .filter-btn').forEach(function (b) {
+        b.classList.remove('is-active');
+      });
+      if (btnEl) btnEl.classList.add('is-active');
+
+      const list = RULES_DATA[category] || RULES_DATA.mle;
+      const gridEl = document.getElementById('rules-grid');
+      if (!gridEl) return;
+
+      gridEl.innerHTML = list.map(function (item) {
+        return `<article class="panel rule-card">` +
+          `<div class="rule-card-head">` +
+            `<div>` +
+              `<div class="mono-label">${item.en}</div>` +
+              `<h3>${item.title}</h3>` +
+            `</div>` +
+            `<span class="chip ${item.badgeCls}">${item.badge}</span>` +
+          `</div>` +
+          `<div class="rule-amount">${item.amount}</div>` +
+          `<div class="rule-meta">${item.meta}</div>` +
+          `<p style="font-size: 0.92rem;">${item.desc}</p>` +
+          `<div class="rule-example">${item.example}</div>` +
+        `</article>`;
+      }).join('');
+    }
+
+    // ═══ CHART.JS LUXURY TAX VISUALIZATION ═══════════════════════════════
+    function buildTaxChart() {
+      const canvas = document.getElementById('taxChart');
+      if (!canvas || typeof Chart === 'undefined') return;
+
+      const styles = getComputedStyle(document.documentElement);
+      const cCyan = styles.getPropertyValue('--data-1').trim() || '#63c7d6';
+      const cAmber = styles.getPropertyValue('--data-3').trim() || '#e8b954';
+      const cCoral = styles.getPropertyValue('--data-4').trim() || '#f08c70';
+      const cContext = styles.getPropertyValue('--data-context').trim() || '#415861';
+      const cText = styles.getPropertyValue('--on-surface-variant').trim() || '#94a8b0';
+      const cGrid = styles.getPropertyValue('--outline-variant').trim() || '#213138';
+      const cSurfaceHigh = styles.getPropertyValue('--surface-container-high').trim() || '#1c2a30';
+      const cOnSurface = styles.getPropertyValue('--on-surface').trim() || '#edf3f5';
+
+      new Chart(canvas, {
+        type: 'bar',
+        data: {
+          labels: ['第一級 (前 $6M)', '第二級 (次 $6M)', '第三級 (餘 $3M)'],
+          datasets: [
+            {
+              label: '該區段超額薪資 ($M)',
+              data: [6.0, 6.0, 3.0],
+              backgroundColor: cContext,
+              borderRadius: 3
+            },
+            {
+              label: '該區段應繳豪華稅 ($M)',
+              data: [6.0, 7.5, 10.5],
+              backgroundColor: [cCyan, cAmber, cCoral],
+              borderRadius: 3
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              labels: {
+                color: cText,
+                font: { family: "'Geist Mono', 'Noto Sans TC', monospace", size: 12 }
+              }
+            },
+            tooltip: {
+              backgroundColor: cSurfaceHigh,
+              titleColor: cOnSurface,
+              bodyColor: cOnSurface,
+              borderColor: cGrid,
+              borderWidth: 1,
+              callbacks: {
+                label: function (ctx) {
+                  return `${ctx.dataset.label}: $${ctx.parsed.y.toFixed(2)}M`;
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: { color: cText, font: { size: 12 } }
+            },
+            y: {
+              beginAtZero: true,
+              suggestedMax: 12,
+              grid: { color: cGrid },
+              ticks: {
+                color: cText,
+                font: { family: "'Geist Mono', monospace", size: 11 },
+                callback: function (val) { return `$${val}M`; }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // ═══ INITIALIZATION & SCROLL ENGINE ══════════════════════════════════
+    buildGraphic();
+    renderGraphic(0);
+    updateSimulator();
+    filterRules('mle', document.getElementById('tab-mle'));
+    buildTaxChart();
+
+    const stepNodes = document.querySelectorAll('.scrolly .step');
+    if (stepNodes.length > 0) {
+      stepNodes[0].classList.add('is-active');
+    }
+
+    if (window.scrollama) {
+      const sc = scrollama();
+      sc.setup({ step: '.scrolly .step', offset: 0.55 })
+        .onStepEnter(function (resp) { activateStep(resp.index); });
+      window.addEventListener('resize', sc.resize);
+    } else {
+      const io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) {
+            activateStep(Number(e.target.dataset.step));
+          }
+        });
+      }, { rootMargin: '-45% 0px -45% 0px', threshold: 0 });
+      stepNodes.forEach(function (n) { io.observe(n); });
+    }
+  </script>
+</body>
+</html>
